@@ -1,0 +1,69 @@
+---
+title: "Analisis Regresi: Perbankan Syariah"
+author: "David Syam Budi"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(readr)
+library(dplyr)
+```
+
+```{r}
+# Unduh sebagai teks
+url <- "https://raw.githubusercontent.com/davidsyambudi/pknstan/42b38e9ca5de8949aa73febcc146c1a8b5a8917d/Perbankan_Syariah.csv"
+raw <- read_lines(url)
+
+# Buang baris pertama (yang sebenarnya bukan header, tapi data)
+raw_clean <- raw[-1]
+
+# Baca sebagai data numerik
+data <- read_delim(
+  paste(raw_clean, collapse = "\n"),
+  delim = ",",
+  col_names = c("Periode", "ROA", "NPL", "SWBI", "IPI", "LDR")
+)
+
+# Konversi ke numerik (jaga-jaga)
+data <- data %>%
+  mutate(
+    ROA = as.numeric(ROA),
+    NPL = as.numeric(NPL),
+    SWBI = as.numeric(SWBI),
+    IPI = as.numeric(IPI),
+    LDR = as.numeric(LDR)
+  )
+
+# Hapus baris dengan NA
+data <- na.omit(data)
+
+# Cek struktur akhir
+glimpse(data)
+
+```
+
+```{r}
+# Model regresi
+model <- lm(LDR ~ ROA + NPL + SWBI + IPI, data = data)
+
+# Tampilkan hasil regresi
+summary(model)
+
+```
+
+```{r}
+# Tambahkan hasil prediksi
+data <- data %>% mutate(Prediksi = predict(model))
+
+# Plot
+plot(data$LDR, data$Prediksi,
+     main = "LDR Aktual vs Prediksi",
+     xlab = "LDR Aktual",
+     ylab = "LDR Prediksi",
+     col = "darkblue", pch = 19)
+abline(a = 0, b = 1, col = "red", lwd = 2)
+
+```
+
