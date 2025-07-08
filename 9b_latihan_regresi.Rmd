@@ -2,7 +2,11 @@
 title: "Analisis Regresi: Perbankan Syariah"
 author: "David Syam Budi"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: flatly
 ---
 
 ```{r setup, include=FALSE}
