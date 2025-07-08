@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 # URL mentah dari file CSV di GitHub
-url <- "https://raw.githubusercontent.com/davidsyambudi/pknstan/main/regresi_suku_bunga_investasi.csv"
+url <- "https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/6301b4aba6f6d62e0dea96ae6e0ecaa3089a3b79/9a_data_investasi_suku_bunga.csv"
 
 # Membaca langsung dari URL
 data <- read.csv(url)

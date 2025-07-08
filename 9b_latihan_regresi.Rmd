@@ -12,34 +12,32 @@ library(dplyr)
 ```
 
 ```{r}
-# Unduh sebagai teks
-url <- "https://raw.githubusercontent.com/davidsyambudi/pknstan/42b38e9ca5de8949aa73febcc146c1a8b5a8917d/Perbankan_Syariah.csv"
+# Unduh data sebagai teks mentah dari GitHub (raw link)
+url <- "https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/6301b4aba6f6d62e0dea96ae6e0ecaa3089a3b79/9b_data_perbankan_syariah.csv"
 raw <- read_lines(url)
 
-# Buang baris pertama (yang sebenarnya bukan header, tapi data)
-raw_clean <- raw[-1]
+# Gabungkan kembali baris-baris menjadi satu teks utuh
+csv_text <- paste(raw, collapse = "\n")
 
-# Baca sebagai data numerik
+# Baca data dengan pemisah titik koma dan desimal koma
 data <- read_delim(
-  paste(raw_clean, collapse = "\n"),
-  delim = ",",
-  col_names = c("Periode", "ROA", "NPL", "SWBI", "IPI", "LDR")
+  file = csv_text,
+  delim = ";",
+  locale = locale(decimal_mark = ","),
+  col_types = cols(
+    Periode = col_character(),
+    ROA = col_double(),
+    NPL = col_double(),
+    SWBI = col_double(),
+    IPI = col_double(),
+    LDR = col_double()
+  )
 )
 
-# Konversi ke numerik (jaga-jaga)
-data <- data %>%
-  mutate(
-    ROA = as.numeric(ROA),
-    NPL = as.numeric(NPL),
-    SWBI = as.numeric(SWBI),
-    IPI = as.numeric(IPI),
-    LDR = as.numeric(LDR)
-  )
-
-# Hapus baris dengan NA
+# Bersihkan data dari NA jika ada
 data <- na.omit(data)
 
-# Cek struktur akhir
+# Tinjau struktur data
 glimpse(data)
 
 ```
