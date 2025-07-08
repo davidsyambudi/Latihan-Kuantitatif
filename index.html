@@ -11,7 +11,7 @@
 
 
 
-<title>Metolit Course by David Syam Budi Bakroh</title>
+<title>Probability Functions in Random Variables</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -366,13 +366,20 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Metolit Course by David Syam Budi
-Bakroh</h1>
+<h1 class="title toc-ignore">Probability Functions in Random
+Variables</h1>
 
 </div>
 
 <div id="TOC">
 <ul>
+<li><a href="#probability_primer" id="toc-probability_primer">8.
+probability_primer</a>
+<ul>
+<li><a href="#random-variable" id="toc-random-variable">Random
+Variable</a></li>
+<li><a href="#probability-distributions" id="toc-probability-distributions">Probability Distributions</a></li>
+</ul></li>
 <li><a href="#a.-latihan-regresi-bagian-1" id="toc-a.-latihan-regresi-bagian-1">9a. Latihan Regresi Bagian
 1</a></li>
 <li><a href="#b.-latihan-regresi-bagian-2" id="toc-b.-latihan-regresi-bagian-2">9b. Latihan Regresi Bagian
@@ -380,6 +387,75 @@ Bakroh</h1>
 </ul>
 </div>
 
+<div id="probability_primer" class="section level1">
+<h1>8. probability_primer</h1>
+<p>Source: Principles of Econometrics 4th ed by R.Carter Hill</p>
+<div id="random-variable" class="section level2">
+<h2>Random Variable</h2>
+<p>A random variable is a variable whose value is unknown until it is
+observed—in other words, a variable that is not perfectly predictable.
+Each random variable has a set of possible values it can take.</p>
+<p>For example, if W represents the number of games our football team
+wins next year, then W can take the values 0, 1, 2, …, up to 13,
+assuming there are at most 13 games. This is a discrete random variable
+because it can only take a limited or countable number of values.</p>
+<p>A special case of a discrete random variable occurs when it can take
+only two possible values. For instance, in a phone survey, if you are
+asked whether you are a college graduate, your answer can only be “yes”
+or “no.” Outcomes like this can be represented using an indicator
+variable, which takes the value 1 if the answer is “yes,” and 0 if the
+answer is “no.” Indicator variables are discrete and are commonly used
+to represent qualitative characteristics, such as gender (male or
+female) or race (white or nonwhite).</p>
+<p>On the other hand, GDP (Gross Domestic Product) can, for practical
+purposes, take any value in the interval from zero to infinity. It is
+therefore treated as a continuous random variable. Other common
+macroeconomic variables, such as interest rates, investment, and
+consumption, are also modeled as continuous random variables. In
+finance, stock market indices like the Dow Jones Industrial Index are
+treated the same way. The defining feature of these variables is that
+they can take any value within a given interval, which makes them
+continuous.</p>
+</div>
+<div id="probability-distributions" class="section level2">
+<h2>Probability Distributions</h2>
+<p>Probability is usually defined in terms of experiments.</p>
+<div id="probability-density-function-pdf" class="section level3">
+<h3>Probability Density Function (PDF)</h3>
+<p>We summarize the probabilities of possible outcomes using a
+<strong>probability density function</strong> (pdf).<br />
+The pdf for a discrete random variable indicates the probability of each
+possible value occurring.</p>
+<p>Let <strong>X</strong> be a discrete random variable. Then the value
+of the probability density function <strong>f(x)</strong> is defined
+as:</p>
+<p><span class="math display">\[
+f(x) = P(X = x)
+\]</span></p>
+<p>Because <strong>f(x)</strong> is a probability, the following
+conditions must hold:</p>
+<ul>
+<li><span class="math inline">\(0 \leq f(x) \leq 1\)</span></li>
+<li>If <strong>X</strong> takes <strong>n</strong> possible values <span class="math inline">\(x_1, x_2, \ldots, x_n\)</span>, then their total
+probability must sum to 1:</li>
+</ul>
+<p><span class="math display">\[
+f(x_1) + f(x_2) + \cdots + f(x_n) = 1
+\]</span></p>
+</div>
+<div id="cumulative-distribution-function-cdf" class="section level3">
+<h3>Cumulative Distribution Function (CDF)</h3>
+<p>An alternative way to represent probabilities is through the
+<strong>cumulative distribution function</strong> (cdf).</p>
+<p>The cdf of the random variable <strong>X</strong>, denoted
+<strong>F(x)</strong>, gives the probability that <strong>X</strong> is
+less than or equal to a specific value <strong>x</strong>:</p>
+<p><span class="math display">\[
+F(x) = P(X \leq x)
+\]</span></p>
+</div>
+</div>
+</div>
 <div id="a.-latihan-regresi-bagian-1" class="section level1">
 <h1>9a. Latihan Regresi Bagian 1</h1>
 <pre class="r"><code># 1. Persiapan Awal

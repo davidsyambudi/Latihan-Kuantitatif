@@ -9,6 +9,10 @@ output:
     fig_width: 6
     fig_height: 4
 ---
+# 8. probability_primer
+
+```{r child = "8_probability_primer.Rmd"}
+```
 
 # 9a. Latihan Regresi Bagian 1
 
