@@ -57,7 +57,7 @@ $$
 F(x) = P(X \leq x)
 $$
 
-![](gambar_ilustrasi_prob.png)
+![](gambar_ilustrasi_prob1.png)
 ![](gambar_ilustrasi_prob2.png)
 ![](gambar_ilustrasi_prob3.png)
 
