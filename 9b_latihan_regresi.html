@@ -375,14 +375,16 @@ display: none;
 </div>
 
 
-<pre class="r"><code># Unduh data sebagai teks mentah dari GitHub (raw link)
+<pre class="r"><code># 1. Persiapan awal
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(readr)
+library(dplyr)
+
+# 2. Pengambilan dan pembersihan data
 url &lt;- &quot;https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/6301b4aba6f6d62e0dea96ae6e0ecaa3089a3b79/9b_data_perbankan_syariah.csv&quot;
 raw &lt;- read_lines(url)
-
-# Gabungkan kembali baris-baris menjadi satu teks utuh
 csv_text &lt;- paste(raw, collapse = &quot;\n&quot;)
 
-# Baca data dengan pemisah titik koma dan desimal koma
 data &lt;- read_delim(
   file = csv_text,
   delim = &quot;;&quot;,
@@ -397,10 +399,7 @@ data &lt;- read_delim(
   )
 )
 
-# Bersihkan data dari NA jika ada
 data &lt;- na.omit(data)
-
-# Tinjau struktur data
 glimpse(data)</code></pre>
 <pre><code>## Rows: 36
 ## Columns: 6
@@ -410,10 +409,8 @@ glimpse(data)</code></pre>
 ## $ SWBI    &lt;dbl&gt; 7.52, 6.49, 10.32, 9.51, 5.50, 7.98, 9.11, 7.11, 9.31, 8.75, 8…
 ## $ IPI     &lt;dbl&gt; 107.27, 105.82, 114.52, 107.80, 110.66, 116.36, 118.59, 119.59…
 ## $ LDR     &lt;dbl&gt; 102.20, 100.00, 99.11, 99.50, 100.50, 100.82, 96.04, 92.91, 90…</code></pre>
-<pre class="r"><code># Model regresi
+<pre class="r"><code># 3. Estimasi model regresi
 model &lt;- lm(LDR ~ ROA + NPL + SWBI + IPI, data = data)
-
-# Tampilkan hasil regresi
 summary(model)</code></pre>
 <pre><code>## 
 ## Call:
@@ -436,10 +433,9 @@ summary(model)</code></pre>
 ## Residual standard error: 5.048 on 31 degrees of freedom
 ## Multiple R-squared:  0.5465, Adjusted R-squared:  0.488 
 ## F-statistic: 9.339 on 4 and 31 DF,  p-value: 4.502e-05</code></pre>
-<pre class="r"><code># Tambahkan hasil prediksi
+<pre class="r"><code># 4. Prediksi dan visualisasi
 data &lt;- data %&gt;% mutate(Prediksi = predict(model))
 
-# Plot
 plot(data$LDR, data$Prediksi,
      main = &quot;LDR Aktual vs Prediksi&quot;,
      xlab = &quot;LDR Aktual&quot;,

@@ -10,12 +10,11 @@ output:
     fig_height: 4
 ---
 
-***
+# 9a. Latihan Regresi Bagian 1
 
 ```{r child = "9a_latihan_regresi.Rmd"}
 ```
-  
-***
-  
+
+# 9b. Latihan Regresi Bagian 2
+
 ```{r child = "9b_latihan_regresi.Rmd"}
-```

@@ -8,49 +8,30 @@ output:
 date: "`r Sys.Date()`"
 ---
 
-```{r setup9a, include=FALSE}
+```{r latihan-regresi-9a, echo=TRUE, warning=FALSE, message=FALSE}
+# 1. Persiapan Awal
 knitr::opts_chunk$set(echo = TRUE)
-```
 
-```{r}
-# URL mentah dari file CSV di GitHub
+# 2. Mengimpor Data dari GitHub
 url <- "https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/6301b4aba6f6d62e0dea96ae6e0ecaa3089a3b79/9a_data_investasi_suku_bunga.csv"
-
-# Membaca langsung dari URL
 data <- read.csv(url)
 
-# Tampilkan beberapa baris pertama untuk memastikan data terbaca dengan benar
+# 3. Tampilkan sebagian data untuk verifikasi
 head(data)
 
-```
-```{r}
-# Melihat struktur data
+# 4. Struktur dan Ringkasan Data
 str(data)
-
-```
-
-```{r}
 summary(data)
-```
-```{r}
-# Model regresi linier: investasi diprediksi oleh suku bunga
-model <- lm(Investasi ~ Tingkat_Suku_Bunga, data = data)
 
-# Ringkasan hasil regresi
+# 5. Estimasi Model Regresi Linier
+model <- lm(Investasi ~ Tingkat_Suku_Bunga, data = data)
 summary(model)
 
-```
-```{r}
-# Visualisasi scatter plot dengan garis regresi
+# 6. Visualisasi: Scatter Plot dan Garis Regresi
 plot(data$Tingkat_Suku_Bunga, data$Investasi,
      main = "Hubungan Tingkat Suku Bunga dan Investasi",
      xlab = "Tingkat Suku Bunga",
      ylab = "Investasi",
      pch = 19,
      col = "darkgreen")
-
-# Tambahkan garis regresi
 abline(model, col = "red", lwd = 2)
-
-```
-

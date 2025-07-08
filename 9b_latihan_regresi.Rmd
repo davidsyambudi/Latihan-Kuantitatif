@@ -9,21 +9,17 @@ output:
     theme: flatly
 ---
 
-```{r setup9b, include=FALSE}
+```{r 9b, echo=TRUE, warning=FALSE, message=FALSE}
+# 1. Persiapan awal
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(readr)
 library(dplyr)
-```
 
-```{r}
-# Unduh data sebagai teks mentah dari GitHub (raw link)
+# 2. Pengambilan dan pembersihan data
 url <- "https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/6301b4aba6f6d62e0dea96ae6e0ecaa3089a3b79/9b_data_perbankan_syariah.csv"
 raw <- read_lines(url)
-
-# Gabungkan kembali baris-baris menjadi satu teks utuh
 csv_text <- paste(raw, collapse = "\n")
 
-# Baca data dengan pemisah titik koma dan desimal koma
 data <- read_delim(
   file = csv_text,
   delim = ";",
@@ -38,34 +34,19 @@ data <- read_delim(
   )
 )
 
-# Bersihkan data dari NA jika ada
 data <- na.omit(data)
-
-# Tinjau struktur data
 glimpse(data)
 
-```
-
-```{r}
-# Model regresi
+# 3. Estimasi model regresi
 model <- lm(LDR ~ ROA + NPL + SWBI + IPI, data = data)
-
-# Tampilkan hasil regresi
 summary(model)
 
-```
-
-```{r}
-# Tambahkan hasil prediksi
+# 4. Prediksi dan visualisasi
 data <- data %>% mutate(Prediksi = predict(model))
 
-# Plot
 plot(data$LDR, data$Prediksi,
      main = "LDR Aktual vs Prediksi",
      xlab = "LDR Aktual",
      ylab = "LDR Prediksi",
      col = "darkblue", pch = 19)
 abline(a = 0, b = 1, col = "red", lwd = 2)
-
-```
-
