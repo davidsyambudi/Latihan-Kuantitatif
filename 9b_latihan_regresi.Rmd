@@ -9,7 +9,7 @@ output:
     theme: flatly
 ---
 
-```{r setup, include=FALSE}
+```{r setup9b, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(readr)
 library(dplyr)

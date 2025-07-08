@@ -8,7 +8,7 @@ output:
 date: "`r Sys.Date()`"
 ---
 
-```{r setup, include=FALSE}
+```{r setup9a, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
