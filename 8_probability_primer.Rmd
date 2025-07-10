@@ -23,7 +23,7 @@ On the other hand, GDP (Gross Domestic Product) can, for practical purposes, tak
 Probability is usually defined in terms of experiments.
 
 ---
-title: "Probability Functions in Random Variables"
+title: "Research Methodology - Quantitative"
 output: html_document
 ---
 
