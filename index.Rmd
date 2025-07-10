@@ -9,16 +9,32 @@ output:
     fig_width: 6
     fig_height: 4
 ---
-# 8. probability_primer
 
-```{r child = "8_probability_primer.Rmd"}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
 ```
 
-# 9a. Latihan Regresi Bagian 1
+# 8. Probability Primer
 
-```{r child = "9a_latihan_regresi.Rmd"}
+```{r c08_prob, child = "8_probability_primer.Rmd"}
 ```
 
-# 9b. Latihan Regresi Bagian 2
+# 9a. Regression Exercise Part 1
 
-```{r child = "9b_latihan_regresi.Rmd"}
+```{r c09a_regresi, child = "9a_latihan_regresi.Rmd"}
+```
+
+# 9b. Regression Exercise Part 2
+
+```{r c09b_regresi, child = "9b_latihan_regresi.Rmd"}
+```
+
+# 10. Using "PoEdata" and OLS in R
+
+```{r c10a_poe, child = "10_PoEdata.Rmd"}
+```
+

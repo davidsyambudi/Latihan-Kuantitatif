@@ -1,0 +1,302 @@
+---
+title: "10a_PoEdata"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup_poe, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Introduction
+
+In this tenth session, we will explore how to access and use econometrics datasets for hands-on practice using R. The datasets used in this session are sourced from the *Principles of Econometrics, 4th Edition* by Hill, Griffiths, and Lim. They are available in the following formats:
+
+* **Stata (.dta)**:
+  [http://www.principlesofeconometrics.com/poe4/poe4stata.htm](http://www.principlesofeconometrics.com/poe4/poe4stata.htm)
+
+* **Excel Spreadsheet**:
+  [http://www.principlesofeconometrics.com/poe4/poe4excel.htm](http://www.principlesofeconometrics.com/poe4/poe4excel.htm)
+
+* **R Dataset Package**:
+  [https://github.com/ccolonescu/PoEdata](https://github.com/ccolonescu/PoEdata)
+
+Although the original format is intended for Stata, this course will use R for all analytical work.
+
+## 2. Installing the `PoEdata` Package
+
+The `PoEdata` package contains a collection of datasets for econometric practice. It was developed by **Constantin Colonescu** and made available on GitHub.
+
+### 2.1 Step-by-Step Installation
+
+```{r install_PoEdata, eval=FALSE}
+## Install devtools if not already installed
+install.packages("devtools")
+
+## Load devtools
+library(devtools)
+
+## Install PoEdata from GitHub
+install_git("https://github.com/ccolonescu/PoEdata")
+```
+
+### 2.2 Common Installation Issues and Solutions
+
+#### 2.2.1 Rtools Not Installed
+
+**Error Message:**
+
+```
+WARNING: Rtools is required to build R packages, but is not currently installed.
+```
+
+**Solution:**
+
+* Download and install Rtools 4.5:
+  [https://cran.r-project.org/bin/windows/Rtools/](https://cran.r-project.org/bin/windows/Rtools/)
+* During installation, check the option to **add Rtools to system PATH**.
+* Verify installation:
+
+```{r, eval=FALSE}
+pkgbuild::has_build_tools(debug = TRUE)
+```
+
+#### 2.2.2 Git Not Installed
+
+**Error Message:**
+
+```
+Error: Failed to install 'unknown package' from Git:
+  Git does not seem to be installed on your system.
+```
+
+**Solution:**
+
+* Download Git for Windows:
+  [https://git-scm.com/download/win](https://git-scm.com/download/win)
+* Choose **"Git from the command line and also from 3rd-party software"** during installation.
+* Restart RStudio and verify:
+
+```{r, eval=FALSE}
+system("git --version")
+```
+
+Expected output:
+
+```
+git version 2.43.0.windows.1
+```
+
+#### 2.2.3 Alternative Installation via `remotes` (Recommended)
+
+```{r, eval=FALSE}
+install.packages("remotes")  ## if not already installed
+remotes::install_github("ccolonescu/PoEdata")
+```
+
+### 2.3 Troubleshooting PATH Issues
+
+If R returns `[1] 127` after Git installation, it means Git is not found in system PATH. Fix by:
+
+1. Locate Git path (e.g., `C:\\Program Files\\Git\\cmd`)
+2. Open:
+   **Control Panel → System → Advanced System Settings → Environment Variables**
+3. Edit the `Path` variable and add Git directory
+4. Restart RStudio
+
+Then test again:
+
+```{r, eval=FALSE}
+system("git --version")
+```
+
+## 3. Summary of Installation
+
+By following the steps above, you will be able to:
+
+* Install essential tools (`Git`, `Rtools`, `PoEdata`)
+* Resolve common installation errors
+* Prepare your R environment for hands-on econometric analysis
+
+```{r}
+library(PoEdata)
+```
+
+## 4. Food Expenditure Data
+
+### 4.1 Load and Examine the Data
+
+```{r}
+data(food)
+str(food)
+head(food, 5)
+food[1:5, "food_exp"]
+subset(food, income < 10)
+```
+
+### 4.2 Summary Statistics
+
+```{r}
+summary(food)
+summary(food$food_exp)
+```
+
+### 4.3 Scatter Plot: Food Expenditure vs Income
+
+```{r}
+library(ggplot2)
+
+ggplot(food, aes(x = income, y = food_exp)) +
+  geom_point() +
+  labs(title = "Food Expenditure Data",
+       x = "Income", y = "Food Expenditure") +
+  scale_y_continuous(breaks = seq(0, 600, 100)) +
+  scale_x_continuous(breaks = seq(0, 35, 5))
+```
+
+### 4.4 Linear Regression and Elasticity
+
+```{r}
+model1 <- lm(food_exp ~ income, data = food)
+summary(model1)
+
+food$yhat <- predict(model1)
+food$ehat <- residuals(model1)
+
+mean_income <- mean(food$income)
+mean_yhat <- mean(food$yhat)
+elas_mean <- coef(model1)["income"] * mean_income / mean_yhat
+
+food$elas <- coef(model1)["income"] * food$income / food$yhat
+summary(food$elas)
+```
+
+### 4.5 Plot with Fitted Line
+
+```{r}
+ggplot(food, aes(x = income, y = food_exp)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Fitted Regression Line",
+       x = "Income", y = "Food Expenditure") +
+  scale_y_continuous(breaks = seq(0, 600, 100)) +
+  scale_x_continuous(breaks = seq(0, 35, 5))
+```
+
+## 5. Quadratic Model Example
+
+### 5.1 Load and Estimate Model
+
+```{r}
+data(br)
+summary(br)
+
+br$sqft2 <- br$sqft^2
+model2 <- lm(price ~ sqft2, data = br)
+br$priceq <- predict(model2)
+```
+
+### 5.2 Plot Quadratic Fit
+
+```{r}
+ggplot(br, aes(x = sqft, y = price)) +
+  geom_point() +
+  geom_line(aes(y = priceq), color = "blue", linewidth = 1) +
+  labs(title = "Quadratic Fit", x = "Square Foot", y = "Price")
+```
+
+### 5.3 Slope and Elasticity at a Point
+
+```{r}
+b2 <- coef(model2)["sqft2"]
+intercept <- coef(model2)["(Intercept)"]
+
+slope_2000 <- 2 * b2 * 2000
+pred_2000 <- intercept + b2 * 2000^2
+elas_2000 <- slope_2000 * 2000 / pred_2000
+```
+
+## 6. Log-linear Model
+
+```{r}
+br$lprice <- log(br$price)
+
+hist(br$price, breaks = 20, main = "Price Distribution", xlab = "Price", freq = FALSE)
+hist(br$lprice, breaks = 20, main = "Log Price Distribution", xlab = "Log(Price)", freq = FALSE)
+
+model3 <- lm(lprice ~ sqft, data = br)
+br$lpricef <- predict(model3)
+br$pricef <- exp(br$lpricef)
+
+ggplot(br, aes(x = sqft, y = price)) +
+  geom_point() +
+  geom_line(aes(y = pricef), color = "red", linewidth = 1)
+```
+
+### 6.1 Elasticity and Marginal Effects
+
+```{r}
+b_sqft <- coef(model3)["sqft"]
+br$me <- b_sqft * br$pricef
+br$elas <- b_sqft * br$sqft
+
+summary(br$me)
+summary(br$elas)
+```
+
+## 7. Indicator Variable Model (University Town)
+
+```{r}
+data(utown)
+summary(utown)
+
+ggplot(utown, aes(x = price)) +
+  geom_histogram(data = subset(utown, utown == 0), binwidth = 12, fill = "blue", alpha = 0.5) +
+  geom_histogram(data = subset(utown, utown == 1), binwidth = 12, fill = "green", alpha = 0.5) +
+  facet_wrap(~ utown, ncol = 1) +
+  labs(title = "House Prices by Neighborhood", x = "Price ($1000)")
+
+model4 <- lm(price ~ factor(utown), data = utown)
+summary(model4)
+
+t.test(price ~ utown, data = utown)
+```
+
+## 8. Simulated Data Experiment
+
+### 8.1 Generate and Model Simulated Data
+
+```{r}
+set.seed(1234567)
+n <- 40
+beta1 <- 100
+beta2 <- 10
+sigma <- 50
+
+x <- rep(c(10, 20), each = n/2)
+e <- rnorm(n, mean = 0, sd = sigma)
+y <- beta1 + beta2 * x + e
+
+sim_data <- data.frame(x, y)
+model_sim <- lm(y ~ x, data = sim_data)
+summary(model_sim)
+```
+
+### 8.2 Monte Carlo Simulation
+
+```{r}
+simulate_model <- function() {
+  x <- rep(c(10, 20), each = n/2)
+  e <- rnorm(n, mean = 0, sd = sigma)
+  y <- beta1 + beta2 * x + e
+  model <- lm(y ~ x)
+  return(c(b1 = coef(model)[1], b2 = coef(model)[2], sig2 = sigma^2))
+}
+
+sim_results <- replicate(1000, simulate_model())
+sim_df <- as.data.frame(t(sim_results))
+
+summary(sim_df)
+hist(sim_df$b2, freq = FALSE, main = "Sampling Distribution of Slope", xlab = "Slope Estimates")
+```
+
