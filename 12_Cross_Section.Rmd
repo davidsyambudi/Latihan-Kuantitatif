@@ -1,0 +1,96 @@
+---
+title: "Regresi Linear Berganda: Data Cross Section Rumah Tangga"
+author: "Ekonomika"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: cosmo
+---
+
+```{r setup12, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Import Data
+
+```{r}
+# Mengimpor data dari GitHub (format raw)
+data <- read.csv("https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/9744a3b1588529f2f3cb561fb5274f16f6b6b7e6/Data_Rumah_Tangga_200_Observasi.csv")
+head(data)
+```
+
+## 2. Estimasi Model Regresi Linear Berganda
+
+Model yang digunakan:
+
+> pengeluaran = β₀ + β₁·pendapatan + β₂·jumlah\_anggota + β₃·pendidikan\_kepala + β₄·umur\_kepala + ε
+
+```{r}
+model <- lm(pengeluaran ~ pendapatan + jumlah_anggota + pendidikan_kepala + umur_kepala, data = data)
+summary(model)
+```
+
+## 3. Uji Asumsi Klasik
+
+### 3.1 Uji Multikolinearitas (VIF)
+
+```{r}
+if(!require(car)) install.packages("car", dependencies=TRUE)
+library(car)
+
+vif(model)
+```
+
+**Interpretasi:**
+VIF < 10 → Tidak ada multikolinearitas serius.
+
+### 3.2 Uji Heteroskedastisitas (Breusch–Pagan Test)
+
+```{r}
+if(!require(lmtest)) install.packages("lmtest", dependencies=TRUE)
+library(lmtest)
+
+bptest(model)
+```
+
+**Interpretasi:**
+
+* H₀: Homoskedastisitas
+* p-value > 0.05 → Tidak ada heteroskedastisitas.
+
+### 3.3 Uji Normalitas Residual
+
+```{r}
+par(mfrow = c(1, 2))
+hist(resid(model), main = "Histogram Residual", xlab = "Residual", col = "skyblue", breaks = 15)
+qqnorm(resid(model))
+qqline(resid(model), col = "red")
+
+shapiro.test(resid(model))
+```
+
+**Interpretasi:**
+
+* H₀: Residual berdistribusi normal
+* p-value > 0.05 → Normalitas terpenuhi.
+
+### 3.4 Uji Autokorelasi (Durbin–Watson)
+
+```{r}
+if(!require(lmtest)) install.packages("lmtest", dependencies=TRUE)
+dwtest(model)
+```
+
+**Interpretasi:**
+
+* H₀: Tidak ada autokorelasi
+* Nilai DW mendekati 2 → Tidak ada autokorelasi.
+
+## 4. Kesimpulan
+
+* Model signifikan dan sesuai teori ekonomi mikro.
+* Hampir semua asumsi klasik regresi linear terpenuhi.
+* Model cocok untuk menganalisis dan memprediksi pengeluaran rumah tangga berdasarkan karakteristik demografis.
+
+```

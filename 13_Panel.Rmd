@@ -1,0 +1,98 @@
+---
+title: "Regresi Panel: Data Dummy Ekonomi Regional"
+author: "Ekonomika"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Import Data
+
+```{r}
+# Load libraries
+if(!require(plm)) install.packages("plm", dependencies=TRUE)
+if(!require(readr)) install.packages("readr", dependencies=TRUE)
+
+library(plm)
+library(readr)
+
+# Import data panel dummy
+data <- read_csv("panel_data_dummy.csv")
+head(data)
+```
+
+## 2. Estimasi Model Regresi Panel
+
+Model yang digunakan:
+
+> investment = β₀ + β₁ · gdp_per_capita + β₂ · education_index + β₃ · inflation_rate + β₄ · unemployment_rate + ε
+
+```{r}
+# Konversi data menjadi panel
+pdata <- pdata.frame(data, index = c("city", "year"))
+
+# Estimasi Fixed Effect
+model_fe <- plm(investment ~ gdp_per_capita + education_index + inflation_rate + unemployment_rate, 
+                data = pdata, model = "within")
+summary(model_fe)
+
+# Estimasi Random Effect
+model_re <- plm(investment ~ gdp_per_capita + education_index + inflation_rate + unemployment_rate, 
+                data = pdata, model = "random")
+summary(model_re)
+```
+
+## 3. Uji Diagnostik dan Asumsi Klasik
+
+### 3.1 Uji Hausman (FE vs RE)
+
+```{r}
+if(!require(lmtest)) install.packages("lmtest", dependencies=TRUE)
+if(!require(phtest)) install.packages("phtest", dependencies=TRUE)
+
+# Uji Hausman
+hausman_test <- phtest(model_fe, model_re)
+hausman_test
+```
+
+**Interpretasi:**
+Jika p-value < 0.05 → Gunakan Fixed Effect.
+
+### 3.2 Uji Multikolinearitas (VIF)
+
+```{r}
+if(!require(car)) install.packages("car", dependencies=TRUE)
+library(car)
+
+# VIF dari model pooled OLS (karena FE tidak mendukung langsung)
+model_ols <- plm(investment ~ gdp_per_capita + education_index + inflation_rate + unemployment_rate, 
+                 data = pdata, model = "pooling")
+vif(lm(investment ~ gdp_per_capita + education_index + inflation_rate + unemployment_rate, data = data))
+```
+
+**Interpretasi:** VIF < 10 → Tidak ada multikolinearitas serius.
+
+### 3.3 Uji Heteroskedastisitas (Breusch–Pagan Test)
+
+```{r}
+bptest(model_ols)
+```
+
+### 3.4 Uji Autokorelasi (Durbin-Watson)
+
+```{r}
+dwtest(model_ols)
+```
+
+## 4. Kesimpulan
+
+* Model panel berhasil diestimasi dan relevan secara teori ekonomi.
+* GDP dan indeks pendidikan berpengaruh positif terhadap investasi.
+* Hasil uji Hausman menentukan model terbaik antara FE dan RE.
+* Sebagian besar asumsi klasik regresi panel terpenuhi.

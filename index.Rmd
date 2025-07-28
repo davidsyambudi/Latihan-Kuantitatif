@@ -4,7 +4,7 @@ output:
   html_document:
     theme: cosmo
     toc: true
-    toc_depth: 2
+    toc_depth: 3
     fig_caption: true
     fig_width: 6
     fig_height: 4
@@ -37,4 +37,17 @@ knitr::opts_chunk$set(
 
 ```{r c10a_poe, child = "10_PoEdata.Rmd"}
 ```
+
+# 11. Time Series
+
+```{r c11, child = "11_Time_Series.Rmd"}
+```
+
+# 12. Cross Section
+
+```{r c12, child = "12_Cross_Section.Rmd"}
+```
+
+```
+
 

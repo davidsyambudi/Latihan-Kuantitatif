@@ -4,11 +4,11 @@ author: "David"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup11, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
-# Import Data
+## 1. Import Data
 
 ```{r}
 library(readr)
@@ -22,7 +22,7 @@ data$Tanggal <- as.Date(data$Tanggal)
 head(data)
 ```
 
-# Plot Data Time Series
+## 2. Plot Data Time Series
 
 ```{r}
 library(ggplot2)
@@ -30,41 +30,41 @@ library(ggplot2)
 ggplot(data, aes(x = Tanggal)) +
   geom_line(aes(y = Pendapatan_Disposabel), color = "blue") +
   geom_line(aes(y = Konsumsi), color = "red") +
-  labs(title = "Konsumsi dan Pendapatan Disposabel (2020-2025)",
+  labs(title = "Konsumsi dan Pendapatan Disposabel (2020–2025)",
        y = "Nilai (juta)", x = "Tanggal") +
   theme_minimal()
 ```
 
-# Regresi Time Series
+## 3. Estimasi Regresi Time Series
 
 ```{r}
 model <- lm(Konsumsi ~ Pendapatan_Disposabel, data = data)
 summary(model)
 ```
 
-# Diagnostik Model: Plot Standar
+## 4. Diagnostik Model: Plot Standar
 
 ```{r}
 par(mfrow = c(2, 2))
 plot(model)
 ```
 
-# Uji Asumsi Klasik
+## 5. Uji Asumsi Klasik
 
-## 1. Uji Normalitas (Shapiro-Wilk)
+### 5.1 Uji Normalitas (Shapiro–Wilk)
 
 ```{r}
 shapiro.test(model$residuals)
 ```
 
-## 2. Uji Heteroskedastisitas (Breusch-Pagan Test)
+### 5.2 Uji Heteroskedastisitas (Breusch–Pagan)
 
 ```{r}
 library(lmtest)
 bptest(model)
 ```
 
-## 3. Uji Autokorelasi (Durbin-Watson Test)
+### 5.3 Uji Autokorelasi (Durbin–Watson)
 
 ```{r}
 library(car)
@@ -73,12 +73,11 @@ durbinWatsonTest(model)
 
 ---
 
-✅ **Penjelasan Singkat Uji Asumsi Klasik:**
+## 6. Penjelasan Singkat Uji Asumsi Klasik
 
-* **Normalitas (Shapiro-Wilk):** Residual harus terdistribusi normal.
-* **Heteroskedastisitas (Breusch-Pagan):** Residual harus homogen (varian tetap).
-* **Autokorelasi (Durbin-Watson):** Tidak boleh ada pola pada residual.
-* **Multikolinearitas (VIF):** Tidak relevan karena hanya satu variabel prediktor.
+✅ **Normalitas (Shapiro–Wilk):** Residual harus terdistribusi normal.
+✅ **Heteroskedastisitas (Breusch–Pagan):** Residual harus homogen (varian tetap).
+✅ **Autokorelasi (Durbin–Watson):** Tidak boleh ada pola pada residual.
+✅ **Multikolinearitas (VIF):** Tidak relevan karena hanya satu variabel prediktor.
 
-```
 
