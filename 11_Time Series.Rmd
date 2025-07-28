@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(readr)
 library(dplyr)
 
-url <- "https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/cf3c8c1ae683402a736338b9c090559d69a370e9/data_konsumsi.csv"
+url <- "https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/93ebaba678dd4e2559c6cad12e8596b1493fab8d/data_dummy_ekonomi.csv"
 data <- read_csv(url)
 
 # Pastikan format tanggal benar
@@ -71,21 +71,14 @@ library(car)
 durbinWatsonTest(model)
 ```
 
-## 4. Uji Multikolinearitas (VIF)
-
-```{r}
-library(car)
-vif(model)
-```
-
-```
-
 ---
 
 ✅ **Penjelasan Singkat Uji Asumsi Klasik:**
-- **Normalitas (Shapiro-Wilk):** Residual harus terdistribusi normal.
-- **Heteroskedastisitas (Breusch-Pagan):** Residual harus homogen (varian tetap).
-- **Autokorelasi (Durbin-Watson):** Tidak boleh ada pola pada residual.
-- **Multikolinearitas (VIF):** Nilai VIF sebaiknya < 10 (ideal < 5).
 
+* **Normalitas (Shapiro-Wilk):** Residual harus terdistribusi normal.
+* **Heteroskedastisitas (Breusch-Pagan):** Residual harus homogen (varian tetap).
+* **Autokorelasi (Durbin-Watson):** Tidak boleh ada pola pada residual.
+* **Multikolinearitas (VIF):** Tidak relevan karena hanya satu variabel prediktor.
+
+```
 
