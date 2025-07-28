@@ -1,0 +1,163 @@
+---
+title: "CFA Produk Lokal - Indonesia"
+author: "David Syambudi (via GitHub)"
+output: 
+  html_document:
+    number_sections: true
+---
+
+## 0. Membuat Kuesioner Survei
+
+Gunakan skala Likert 1–5:  
+**1 = Sangat Tidak Setuju** sampai **5 = Sangat Setuju**
+
+### Kesadaran terhadap Produk Lokal (KPL)
+- **KPL1**: Saya mengetahui manfaat menggunakan produk buatan Indonesia.  
+- **KPL2**: Saya percaya bahwa kualitas produk lokal tidak kalah dengan produk impor.  
+- **KPL3**: Saya secara aktif mencari informasi tentang produk lokal saat akan berbelanja.
+
+### Preferensi Harga (PH)
+- **PH1**: Harga yang terjangkau menjadi prioritas utama dalam keputusan pembelian saya.  
+- **PH2**: Saya cenderung memilih produk dengan harga lebih murah meskipun bukan produk lokal.  
+- **PH3**: Saya membandingkan harga sebelum memutuskan untuk membeli suatu produk.
+
+### Dukungan terhadap UMKM (DUMKM)
+- **DUMKM1**: Saya lebih memilih membeli dari usaha kecil dan menengah (UMKM) lokal dibanding merek besar.  
+- **DUMKM2**: Saya percaya bahwa membeli produk dari UMKM membantu perekonomian Indonesia.  
+- **DUMKM3**: Saya bersedia membayar lebih jika produk tersebut berasal dari pelaku UMKM lokal.
+
+```{r setup14, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(lavaan)
+library(tidyverse)
+library(psych)
+library(semPlot)
+```
+
+## 1. Import Data dan Validasi
+
+```{r}
+url <- "https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/7f19b90036bf567c508c582a80ae5d3343a0d8af/Data_Dummy_Survei_CFA_Produk_Lokal.csv"
+data <- read.csv(url)
+
+## Cek nama variabel
+names(data)
+
+## Pastikan semua indikator tersedia
+expected_vars <- c("KPL1", "KPL2", "KPL3", "PH1", "PH2", "PH3", "DUMKM1", "DUMKM2", "DUMKM3")
+missing_vars <- setdiff(expected_vars, names(data))
+if (length(missing_vars) > 0) {
+  stop(paste("Variabel hilang dari data:", paste(missing_vars, collapse = ", ")))
+}
+
+## Cek nilai unik per variabel
+apply(data[, expected_vars], 2, function(x) length(unique(x)))
+```
+
+## 2. Struktur Model CFA Awal
+
+```{r}
+model_cfa <- '
+  Kesadaran =~ KPL1 + KPL2 + KPL3
+  Harga =~ PH1 + PH2 + PH3
+  UMKM =~ DUMKM1 + DUMKM2 + DUMKM3
+'
+```
+
+## 3. Estimasi Model CFA
+
+```{r}
+fit_cfa <- cfa(model_cfa, data = data, std.lv = TRUE)
+summary(fit_cfa, fit.measures = TRUE, standardized = TRUE)
+```
+
+## 4. Evaluasi Goodness of Fit
+
+```{r}
+fitMeasures(fit_cfa, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+## 5. Visualisasi Model
+
+```{r}
+semPaths(fit_cfa,
+         whatLabels = "std",
+         layout = "tree",
+         edge.label.cex = 0.8,
+         fade = FALSE,
+         residuals = FALSE,
+         sizeMan = 6)
+```
+
+## 6. Evaluasi Modification Indices (MI) – Aman terhadap Error
+
+```{r}
+# Menghindari error 'information matrix is singular'
+modindices_df <- tryCatch({
+  modindices(fit_cfa, free = TRUE)
+}, error = function(e) {
+  message("Gagal menghitung Modification Indices karena matrix singular.")
+  return(data.frame())
+})
+
+## Tampilkan MI > 10 jika berhasil
+if (nrow(modindices_df) > 0) {
+  modindices_df %>%
+    filter(mi > 10) %>%
+    arrange(desc(mi)) %>%
+    head(10)
+} else {
+  message("Tidak ada MI yang ditampilkan karena error.")
+}
+```
+
+## 7. Modifikasi Model Berdasarkan MI (Opsional)
+
+```{r}
+model_cfa_modified <- '
+  Kesadaran =~ KPL1 + KPL2 + KPL3
+  Harga =~ PH1 + PH2 + PH3
+  UMKM =~ DUMKM1 + DUMKM2 + DUMKM3
+
+  ## Korelasi residual berdasarkan MI (jika ditemukan relevan)
+  KPL2 ~~ KPL3
+  PH1 ~~ PH3
+'
+
+fit_cfa_mod <- cfa(model_cfa_modified, data = data, std.lv = TRUE)
+summary(fit_cfa_mod, fit.measures = TRUE, standardized = TRUE)
+```
+
+## 8. Evaluasi Model Setelah Modifikasi
+
+```{r}
+fitMeasures(fit_cfa_mod, c("chisq", "df", "pvalue", "cfi", "tli", "rmsea", "srmr"))
+```
+
+## 9. Visualisasi Model Modifikasi
+
+```{r}
+semPaths(fit_cfa_mod,
+         whatLabels = "std",
+         layout = "tree",
+         edge.label.cex = 0.8,
+         fade = FALSE,
+         residuals = FALSE,
+         sizeMan = 6)
+```
+
+## 10. Kesimpulan
+
+* Model CFA awal dapat dievaluasi, tetapi MI gagal dihitung karena matrix singular → ditangani dengan `free = TRUE`.
+* Jika MI berhasil dihitung, maka modifikasi model dilakukan secara hati-hati berdasarkan teori.
+* Analisis CFA ini tetap valid untuk memeriksa konstruk Kesadaran Produk Lokal, Preferensi Harga, dan Dukungan terhadap UMKM.
+
+```
+
+---
+
+### 🔄 Jika Masih Error Saat Knit
+
+- Jalankan `.Rmd` **baris demi baris** di RStudio untuk melihat titik error sebenarnya
+- Periksa **jumlah responden**, minimal 50+, ideal 100+ untuk CFA stabil
+

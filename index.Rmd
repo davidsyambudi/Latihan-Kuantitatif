@@ -53,6 +53,11 @@ knitr::opts_chunk$set(
 ```{r c13, child = "13_Panel.Rmd"}
 ```
 
+# 14. CFA
+
+```{r c14, child = "14_CFA.Rmd"}
+```
+
 ```
 
 
