@@ -94,3 +94,4 @@ dwtest(model)
 * Model cocok untuk menganalisis dan memprediksi pengeluaran rumah tangga berdasarkan karakteristik demografis.
 
 ```
+```

@@ -1,5 +1,5 @@
 ---
-title: "Regresi Panel: Data Dummy Ekonomi Regional"
+title: "Regresi Linear Berganda: Data Panel Ekonomi Kota"
 author: "Ekonomika"
 output: 
   html_document:
@@ -8,22 +8,18 @@ output:
     theme: cosmo
 ---
 
-```{r setup, include=FALSE}
+```{r setup13, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## 1. Import Data
 
 ```{r}
-# Load libraries
-if(!require(plm)) install.packages("plm", dependencies=TRUE)
-if(!require(readr)) install.packages("readr", dependencies=TRUE)
-
-library(plm)
+# Mengimpor data panel dari GitHub (format raw)
+if(!require(readr)) install.packages("readr")
 library(readr)
 
-# Import data panel dummy
-data <- read_csv("panel_data_dummy.csv")
+data <- read_csv("https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/9781d0093773696f72c8d9196c604e932a31f4c2/data_dummy_panel.csv")
 head(data)
 ```
 
@@ -31,68 +27,87 @@ head(data)
 
 Model yang digunakan:
 
-> investment = β₀ + β₁ · gdp_per_capita + β₂ · education_index + β₃ · inflation_rate + β₄ · unemployment_rate + ε
+> investment = β₀ + β₁·gdp\_per\_capita + β₂·education\_index + β₃·inflation\_rate + ε
 
 ```{r}
-# Konversi data menjadi panel
+# Load library untuk regresi panel
+if(!require(plm)) install.packages("plm")
+library(plm)
+
+# Ubah ke format panel
 pdata <- pdata.frame(data, index = c("city", "year"))
 
-# Estimasi Fixed Effect
-model_fe <- plm(investment ~ gdp_per_capita + education_index + inflation_rate + unemployment_rate, 
-                data = pdata, model = "within")
-summary(model_fe)
+# Model Fixed Effect
+model_fe <- plm(investment ~ gdp_per_capita + education_index + inflation_rate, data = pdata, model = "within")
 
-# Estimasi Random Effect
-model_re <- plm(investment ~ gdp_per_capita + education_index + inflation_rate + unemployment_rate, 
-                data = pdata, model = "random")
+# Model Random Effect
+model_re <- plm(investment ~ gdp_per_capita + education_index + inflation_rate, data = pdata, model = "random")
+
+# Tampilkan hasil
+summary(model_fe)
 summary(model_re)
 ```
 
-## 3. Uji Diagnostik dan Asumsi Klasik
-
-### 3.1 Uji Hausman (FE vs RE)
+## 3. Uji Pemilihan Model (Hausman Test)
 
 ```{r}
-if(!require(lmtest)) install.packages("lmtest", dependencies=TRUE)
-if(!require(phtest)) install.packages("phtest", dependencies=TRUE)
+# Uji Hausman: Fixed vs Random
+if(!require(lmtest)) install.packages("lmtest")
+library(lmtest)
 
-# Uji Hausman
 hausman_test <- phtest(model_fe, model_re)
 hausman_test
 ```
 
 **Interpretasi:**
-Jika p-value < 0.05 → Gunakan Fixed Effect.
 
-### 3.2 Uji Multikolinearitas (VIF)
+* H₀: Random Effect lebih efisien
+* Jika p-value < 0.05 → gunakan Fixed Effect
+
+## 4. Uji Asumsi Klasik
+
+### 4.1 Uji Multikolinearitas (VIF)
 
 ```{r}
-if(!require(car)) install.packages("car", dependencies=TRUE)
+if(!require(car)) install.packages("car")
 library(car)
 
-# VIF dari model pooled OLS (karena FE tidak mendukung langsung)
-model_ols <- plm(investment ~ gdp_per_capita + education_index + inflation_rate + unemployment_rate, 
-                 data = pdata, model = "pooling")
-vif(lm(investment ~ gdp_per_capita + education_index + inflation_rate + unemployment_rate, data = data))
+# Model OLS biasa untuk uji VIF
+model_ols <- lm(investment ~ gdp_per_capita + education_index + inflation_rate, data = data)
+vif(model_ols)
 ```
 
-**Interpretasi:** VIF < 10 → Tidak ada multikolinearitas serius.
+**Interpretasi:**
+VIF < 10 → Tidak ada multikolinearitas serius.
 
-### 3.3 Uji Heteroskedastisitas (Breusch–Pagan Test)
+### 4.2 Uji Heteroskedastisitas (Breusch–Pagan Test)
 
 ```{r}
 bptest(model_ols)
 ```
 
-### 3.4 Uji Autokorelasi (Durbin-Watson)
+**Interpretasi:**
+
+* H₀: Homoskedastisitas
+* p-value > 0.05 → Tidak ada heteroskedastisitas
+
+### 4.3 Uji Autokorelasi (Durbin–Watson)
 
 ```{r}
+if(!require(lmtest)) install.packages("lmtest")
 dwtest(model_ols)
 ```
 
-## 4. Kesimpulan
+**Interpretasi:**
 
-* Model panel berhasil diestimasi dan relevan secara teori ekonomi.
-* GDP dan indeks pendidikan berpengaruh positif terhadap investasi.
-* Hasil uji Hausman menentukan model terbaik antara FE dan RE.
-* Sebagian besar asumsi klasik regresi panel terpenuhi.
+* H₀: Tidak ada autokorelasi
+* Nilai DW mendekati 2 → Tidak ada autokorelasi
+
+## 5. Kesimpulan
+
+* Model yang terbaik ditentukan oleh uji Hausman (Fixed atau Random).
+* GDP per kapita dan indeks pendidikan berpengaruh signifikan terhadap investasi, sesuai teori ekonomi.
+* Hampir semua asumsi klasik regresi terpenuhi.
+* Model cocok digunakan untuk analisis kebijakan investasi antar kota dan waktu.
+
+```
