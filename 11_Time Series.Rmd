@@ -1,0 +1,91 @@
+---
+title: "Simulasi Regresi Time Series Ekonomi"
+author: "David"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Import Data
+
+```{r}
+library(readr)
+library(dplyr)
+
+url <- "https://raw.githubusercontent.com/davidsyambudi/Latihan-Kuantitatif/cf3c8c1ae683402a736338b9c090559d69a370e9/data_konsumsi.csv"
+data <- read_csv(url)
+
+# Pastikan format tanggal benar
+data$Tanggal <- as.Date(data$Tanggal)
+head(data)
+```
+
+# Plot Data Time Series
+
+```{r}
+library(ggplot2)
+
+ggplot(data, aes(x = Tanggal)) +
+  geom_line(aes(y = Pendapatan_Disposabel), color = "blue") +
+  geom_line(aes(y = Konsumsi), color = "red") +
+  labs(title = "Konsumsi dan Pendapatan Disposabel (2020-2025)",
+       y = "Nilai (juta)", x = "Tanggal") +
+  theme_minimal()
+```
+
+# Regresi Time Series
+
+```{r}
+model <- lm(Konsumsi ~ Pendapatan_Disposabel, data = data)
+summary(model)
+```
+
+# Diagnostik Model: Plot Standar
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model)
+```
+
+# Uji Asumsi Klasik
+
+## 1. Uji Normalitas (Shapiro-Wilk)
+
+```{r}
+shapiro.test(model$residuals)
+```
+
+## 2. Uji Heteroskedastisitas (Breusch-Pagan Test)
+
+```{r}
+library(lmtest)
+bptest(model)
+```
+
+## 3. Uji Autokorelasi (Durbin-Watson Test)
+
+```{r}
+library(car)
+durbinWatsonTest(model)
+```
+
+## 4. Uji Multikolinearitas (VIF)
+
+```{r}
+library(car)
+vif(model)
+```
+
+```
+
+---
+
+✅ **Penjelasan Singkat Uji Asumsi Klasik:**
+- **Normalitas (Shapiro-Wilk):** Residual harus terdistribusi normal.
+- **Heteroskedastisitas (Breusch-Pagan):** Residual harus homogen (varian tetap).
+- **Autokorelasi (Durbin-Watson):** Tidak boleh ada pola pada residual.
+- **Multikolinearitas (VIF):** Nilai VIF sebaiknya < 10 (ideal < 5).
+
+
