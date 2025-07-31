@@ -1,0 +1,16 @@
+------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\infernos\OneDrive - Kemenkeu\03 Lain Lain\Mengajar 2025\
+> Metolit\Latihan-Kuantitatif\chap02_indicator.log
+  log type:  text
+ opened on:  31 Jul 2025, 16:21:10
+
+. use utown, clear
+file utown.dta not found
+r(601);
+
+end of do-file
+
+r(601);
+
+. exit, clear

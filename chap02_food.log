@@ -1,0 +1,269 @@
+------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\infernos\OneDrive - Kemenkeu\03 Lain Lain\Mengajar 2025\
+> Metolit\Latihan-Kuantitatif\chap02_food.log
+  log type:  text
+ opened on:  31 Jul 2025, 16:21:05
+
+. use food, clear
+
+. 
+. describe
+
+Contains data from food.dta
+ Observations:            40                  
+    Variables:             2                  
+------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+------------------------------------------------------------------------------
+food_exp        double  %10.0g                household food expenditure per
+                                                week
+income          double  %10.0g                weekly household income
+------------------------------------------------------------------------------
+Sorted by: 
+
+. list
+
+     +-------------------+
+     | food_exp   income |
+     |-------------------|
+  1. |   115.22     3.69 |
+  2. |   135.98     4.39 |
+  3. |   119.34     4.75 |
+  4. |   114.96     6.03 |
+  5. |   187.05    12.47 |
+     |-------------------|
+  6. |   243.92    12.98 |
+  7. |   267.43     14.2 |
+  8. |   238.71    14.76 |
+  9. |   295.94    15.32 |
+ 10. |   317.78    16.39 |
+     |-------------------|
+ 11. |      216    17.35 |
+ 12. |   240.35    17.77 |
+ 13. |   386.57    17.93 |
+ 14. |   261.53    18.43 |
+ 15. |   249.34    18.55 |
+     |-------------------|
+ 16. |   309.87     18.8 |
+ 17. |   345.89    18.81 |
+ 18. |   165.54    19.04 |
+ 19. |   196.98    19.22 |
+ 20. |   395.26    19.93 |
+     |-------------------|
+ 21. |   406.34    20.13 |
+ 22. |   171.92    20.33 |
+ 23. |   303.23    20.37 |
+ 24. |   377.04    20.43 |
+ 25. |   194.35    21.45 |
+     |-------------------|
+ 26. |   213.48    22.52 |
+ 27. |   293.87    22.55 |
+ 28. |   259.61    22.86 |
+ 29. |   323.71     24.2 |
+ 30. |   275.02    24.39 |
+     |-------------------|
+ 31. |   109.71    24.42 |
+ 32. |   359.19     25.2 |
+ 33. |   201.51     25.5 |
+ 34. |   460.36    26.61 |
+ 35. |   447.76     26.7 |
+     |-------------------|
+ 36. |   482.55    27.14 |
+ 37. |   438.29    27.16 |
+ 38. |   587.66    28.62 |
+ 39. |   257.95     29.4 |
+ 40. |   375.73     33.4 |
+     +-------------------+
+
+. list in 1/5
+
+     +-------------------+
+     | food_exp   income |
+     |-------------------|
+  1. |   115.22     3.69 |
+  2. |   135.98     4.39 |
+  3. |   119.34     4.75 |
+  4. |   114.96     6.03 |
+  5. |   187.05    12.47 |
+     +-------------------+
+
+. list food_exp in 1/5
+
+     +----------+
+     | food_exp |
+     |----------|
+  1. |   115.22 |
+  2. |   135.98 |
+  3. |   119.34 |
+  4. |   114.96 |
+  5. |   187.05 |
+     +----------+
+
+. list food_exp if income < 10
+
+     +----------+
+     | food_exp |
+     |----------|
+  1. |   115.22 |
+  2. |   135.98 |
+  3. |   119.34 |
+  4. |   114.96 |
+     +----------+
+
+. 
+. summarize
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    food_exp |         40    283.5735    112.6752     109.71     587.66
+      income |         40    19.60475    6.847773       3.69       33.4
+
+. summarize food_exp, detail
+
+             household food expenditure per week
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%       109.71         109.71
+ 5%       115.09         114.96
+10%       127.66         115.22       Obs                  40
+25%      199.245         119.34       Sum of wgt.          40
+
+50%       264.48                      Mean           283.5735
+                        Largest       Std. dev.      112.6752
+75%       367.46         447.76
+90%      443.025         460.36       Variance        12695.7
+95%      471.455         482.55       Skewness       .4920827
+99%       587.66         587.66       Kurtosis       2.851522
+
+. 
+. twoway (scatter food_exp income)
+
+. graph save food1, replace
+file food1.gph saved
+
+. 
+. twoway (scatter food_exp income), saving(food1, replace)
+file food1.gph saved
+
+. twoway (scatter food_exp income), name(food1, replace)
+
+. 
+. twoway (scatter food_exp income) ///
+>     , ylabel(0(100)600) ///
+>       xlabel(0(5)35) ///
+>       title("Food Expenditure Data")
+
+. graph save food2, replace
+file food2.gph saved
+
+. 
+. regress food_exp income
+
+      Source |       SS           df       MS      Number of obs   =        40
+-------------+----------------------------------   F(1, 38)        =     23.79
+       Model |  190626.984         1  190626.984   Prob > F        =    0.0000
+    Residual |  304505.176        38   8013.2941   R-squared       =    0.3850
+-------------+----------------------------------   Adj R-squared   =    0.3688
+       Total |   495132.16        39  12695.6964   Root MSE        =    89.517
+
+------------------------------------------------------------------------------
+    food_exp | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      income |   10.20964   2.093264     4.88   0.000     5.972052    14.44723
+       _cons |     83.416   43.41016     1.92   0.062    -4.463279    171.2953
+------------------------------------------------------------------------------
+
+. predict yhat, xb
+
+. predict ehat, residuals
+
+. 
+. margins, eyex(income) atmeans
+
+Conditional marginal effects                                Number of obs = 40
+Model VCE: OLS
+
+Expression: Linear prediction, predict()
+ey/ex wrt:  income
+At: income = 19.60475 (mean)
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      ey/ex   std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      income |   .7058399   .1489436     4.74   0.000     .4139159    .9977639
+------------------------------------------------------------------------------
+
+. margins, eyex(income)
+
+Average marginal effects                                    Number of obs = 40
+Model VCE: OLS
+
+Expression: Linear prediction, predict()
+ey/ex wrt:  income
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      ey/ex   std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      income |   .6796126   .1466535     4.63   0.000     .3921769    .9670482
+------------------------------------------------------------------------------
+
+. generate elas = _b[income]*income/yhat
+
+. summarize elas
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        elas |         40    .6796126    .1168024   .3111216   .8034579
+
+. 
+. twoway (scatter food_exp income) ///
+>        (lfit food_exp income) ///
+>        , ylabel(0(100)600) ///
+>          xlabel(0(5)35) ///
+>          title("Fitted Regression Line")
+
+. graph save food3, replace
+file food3.gph saved
+
+. 
+. estat vce
+
+Covariance matrix of coefficients of regress model
+
+        e(V) |     income       _cons 
+-------------+-----------------------
+      income |  4.3817522             
+       _cons | -85.903157   1884.4423 
+
+. 
+. edit
+
+. set obs 41
+Number of observations (_N) was 40, now 41.
+
+. replace income = 20 in 41
+(1 real change made)
+
+. predict yhat0
+(option xb assumed; fitted values)
+
+. list income yhat0 in 41
+
+     +-------------------+
+     | income      yhat0 |
+     |-------------------|
+ 41. |     20   287.6089 |
+     +-------------------+
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\infernos\OneDrive - Kemenkeu\03 Lain Lain\Mengajar 2025\
+> Metolit\Latihan-Kuantitatif\chap02_food.log
+  log type:  text
+ closed on:  31 Jul 2025, 16:21:08
+------------------------------------------------------------------------------

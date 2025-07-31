@@ -1,0 +1,232 @@
+------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\infernos\OneDrive - Kemenkeu\03 Lain Lain\Mengajar 2025\
+> Metolit\Latihan-Kuantitatif\chap02_quad.log
+  log type:  text
+ opened on:  31 Jul 2025, 16:21:08
+
+. use br, clear
+
+. 
+. describe
+
+Contains data from br.dta
+ Observations:         1,080                  
+    Variables:            11                  13 Aug 2007 16:33
+                                              (_dta has notes)
+------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+------------------------------------------------------------------------------
+price           float   %9.0g                 sale price, dollars
+sqft            float   %9.0g                 total square feet
+bedrooms        float   %9.0g                 number of bedrooms
+baths           float   %9.0g                 number of full baths
+age             float   %9.0g                 age in years
+occupancy       float   %9.0g                 Owner=1 Vacant=2 Tenant=3
+pool            float   %9.0g                 =1 if yes
+style           float   %9.0g                 Trad=1 Townh=2 Ranch=3 New
+                                                Orleans=4 Mobile=5 Garden=6
+                                                French=7 Cott=8 Contemp=9
+fireplace       float   %9.0g                 =1 if yes
+waterfront      float   %9.0g                 =1 if yes
+dom             float   %9.0g                 Days on the market
+------------------------------------------------------------------------------
+Sorted by: 
+
+. summarize
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       price |      1,080    154863.2    122912.8      22000    1580000
+        sqft |      1,080    2325.938    1008.098        662       7897
+    bedrooms |      1,080     3.17963    .7094959          1          8
+       baths |      1,080    1.973148    .6120669          1          5
+         age |      1,080    19.57407    17.19425          1         80
+-------------+---------------------------------------------------------
+   occupancy |      1,080    1.564815    .5945871          1          3
+        pool |      1,080    .0796296    .2708444          0          1
+       style |      1,080    3.752778    3.655837          1         11
+   fireplace |      1,080     .562963    .4962496          0          1
+  waterfront |      1,080    .0722222    .2589754          0          1
+-------------+---------------------------------------------------------
+         dom |      1,080    74.05648    94.89677          0        728
+
+. 
+. generate sqft2 = sqft^2
+
+. regress price sqft2
+
+      Source |       SS           df       MS      Number of obs   =     1,080
+-------------+----------------------------------   F(1, 1078)      =   2425.98
+       Model |  1.1286e+13         1  1.1286e+13   Prob > F        =    0.0000
+    Residual |  5.0150e+12     1,078  4.6522e+09   R-squared       =    0.6923
+-------------+----------------------------------   Adj R-squared   =    0.6921
+       Total |  1.6301e+13     1,079  1.5108e+10   Root MSE        =     68207
+
+------------------------------------------------------------------------------
+       price | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       sqft2 |   .0154213   .0003131    49.25   0.000      .014807    .0160356
+       _cons |   55776.56   2890.441    19.30   0.000     50105.04    61448.09
+------------------------------------------------------------------------------
+
+. predict priceq, xb
+
+. 
+. twoway (scatter price sqft) ///
+>        (line priceq sqft, sort lwidth(medthick))
+
+. graph save br_quad, replace
+file br_quad.gph saved
+
+. 
+. di "slope at 2000 = " 2*_b[sqft2]*2000
+slope at 2000 = 61.685207
+
+. di "slope at 4000 = " 2*_b[sqft2]*4000
+slope at 4000 = 123.37041
+
+. di "slope at 6000 = " 2*_b[sqft2]*6000
+slope at 6000 = 185.05562
+
+. 
+. di "predicted price at 2000 = " _b[_cons] + _b[sqft2]*2000^2
+predicted price at 2000 = 117461.77
+
+. di "predicted price at 4000 = " _b[_cons] + _b[sqft2]*4000^2
+predicted price at 4000 = 302517.39
+
+. di "predicted price at 6000 = " _b[_cons] + _b[sqft2]*6000^2
+predicted price at 6000 = 610943.42
+
+. 
+. di "elasticity at 2000 = " 2*_b[sqft2]*2000^2 / (_b[_cons] + _b[sqft2]*2000^
+> 2)
+elasticity at 2000 = 1.0503027
+
+. di "elasticity at 4000 = " 2*_b[sqft2]*4000^2 / (_b[_cons] + _b[sqft2]*4000^
+> 2)
+elasticity at 4000 = 1.6312505
+
+. di "elasticity at 6000 = " 2*_b[sqft2]*6000^2 / (_b[_cons] + _b[sqft2]*6000^
+> 2)
+elasticity at 6000 = 1.8174084
+
+. 
+. regress price c.sqft#c.sqft
+
+      Source |       SS           df       MS      Number of obs   =     1,080
+-------------+----------------------------------   F(1, 1078)      =   2425.98
+       Model |  1.1286e+13         1  1.1286e+13   Prob > F        =    0.0000
+    Residual |  5.0150e+12     1,078  4.6522e+09   R-squared       =    0.6923
+-------------+----------------------------------   Adj R-squared   =    0.6921
+       Total |  1.6301e+13     1,079  1.5108e+10   Root MSE        =     68207
+
+------------------------------------------------------------------------------
+       price | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      c.sqft#|
+      c.sqft |   .0154213   .0003131    49.25   0.000      .014807    .0160356
+             |
+       _cons |   55776.57   2890.441    19.30   0.000     50105.04    61448.09
+------------------------------------------------------------------------------
+
+. predict price2
+(option xb assumed; fitted values)
+
+. 
+. margins, dydx(*) at(sqft=(2000 4000 6000))
+
+Conditional marginal effects                             Number of obs = 1,080
+Model VCE: OLS
+
+Expression: Linear prediction, predict()
+dy/dx wrt:  sqft
+1._at: sqft = 2000
+2._at: sqft = 4000
+3._at: sqft = 6000
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+sqft         |
+         _at |
+          1  |   61.68521   1.252385    49.25   0.000     59.23058    64.13983
+          2  |   123.3704   2.504769    49.25   0.000     118.4612    128.2797
+          3  |   185.0556   3.757154    49.25   0.000     177.6917    192.4195
+------------------------------------------------------------------------------
+
+. margins, eyex(*) at(sqft=(2000 4000 6000))
+
+Conditional marginal effects                             Number of obs = 1,080
+Model VCE: OLS
+
+Expression: Linear prediction, predict()
+ey/ex wrt:  sqft
+1._at: sqft = 2000
+2._at: sqft = 4000
+3._at: sqft = 6000
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      ey/ex   std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+sqft         |
+         _at |
+          1  |   1.050303   .0336868    31.18   0.000     .9842778    1.116328
+          2  |   1.631251   .0203148    80.30   0.000     1.591434    1.671067
+          3  |   1.817408   .0112071   162.17   0.000     1.795443    1.839374
+------------------------------------------------------------------------------
+
+. margins, eyex(*)
+
+Average marginal effects                                 Number of obs = 1,080
+Model VCE: OLS
+
+Expression: Linear prediction, predict()
+ey/ex wrt:  sqft
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      ey/ex   std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        sqft |   1.102401   .0292176    37.73   0.000     1.045135    1.159666
+------------------------------------------------------------------------------
+
+. 
+. regress, coeflegend
+
+      Source |       SS           df       MS      Number of obs   =     1,080
+-------------+----------------------------------   F(1, 1078)      =   2425.98
+       Model |  1.1286e+13         1  1.1286e+13   Prob > F        =    0.0000
+    Residual |  5.0150e+12     1,078  4.6522e+09   R-squared       =    0.6923
+-------------+----------------------------------   Adj R-squared   =    0.6921
+       Total |  1.6301e+13     1,079  1.5108e+10   Root MSE        =     68207
+
+------------------------------------------------------------------------------
+       price | Coefficient  Legend
+-------------+----------------------------------------------------------------
+      c.sqft#|
+      c.sqft |   .0154213  _b[c.sqft#c.sqft]
+             |
+       _cons |   55776.57  _b[_cons]
+------------------------------------------------------------------------------
+
+. generate elas2 = 2*_b[c.sqft#c.sqft]*(sqft^2)/price2
+
+. summarize elas2
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+       elas2 |      1,080    1.102401    .3528353   .2161448   1.890364
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\infernos\OneDrive - Kemenkeu\03 Lain Lain\Mengajar 2025\
+> Metolit\Latihan-Kuantitatif\chap02_quad.log
+  log type:  text
+ closed on:  31 Jul 2025, 16:21:09
+------------------------------------------------------------------------------

@@ -1,0 +1,109 @@
+------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\infernos\OneDrive - Kemenkeu\03 Lain Lain\Mengajar 2025\
+> Metolit\Latihan-Kuantitatif\chap02_llin.log
+  log type:  text
+ opened on:  31 Jul 2025, 16:21:09
+
+. use br, clear
+
+. 
+. summarize price, detail
+
+                     sale price, dollars
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%        31000          22000
+ 5%      59897.5          22000
+10%        74450          22654       Obs               1,080
+25%        99000          23000       Sum of wgt.       1,080
+
+50%       130000                      Mean           154863.2
+                        Largest       Std. dev.      122912.8
+75%       170325        1280000
+90%       244200        1400000       Variance       1.51e+10
+95%       315000        1575000       Skewness       6.291909
+99%       610000        1580000       Kurtosis       60.94976
+
+. histogram price, percent
+(bin=30, start=22000, width=51933.333)
+
+. graph save price, replace
+file price.gph saved
+
+. 
+. generate lprice = ln(price)
+
+. histogram lprice, percent
+(bin=30, start=9.9987974, width=.14247128)
+
+. graph save lprice, replace
+file lprice.gph saved
+
+. 
+. reg lprice sqft
+
+      Source |       SS           df       MS      Number of obs   =     1,080
+-------------+----------------------------------   F(1, 1078)      =   1794.78
+       Model |  185.472091         1  185.472091   Prob > F        =    0.0000
+    Residual |  111.400275     1,078  .103339773   R-squared       =    0.6248
+-------------+----------------------------------   Adj R-squared   =    0.6244
+       Total |  296.872366     1,079  .275136577   Root MSE        =    .32147
+
+------------------------------------------------------------------------------
+      lprice | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        sqft |   .0004113   9.71e-06    42.36   0.000     .0003922    .0004303
+       _cons |    10.8386   .0246075   440.46   0.000     10.79031    10.88688
+------------------------------------------------------------------------------
+
+. predict lpricef, xb
+
+. generate pricef = exp(lpricef)
+
+. 
+. twoway (scatter price sqft) ///
+>        (line pricef sqft, sort lwidth(medthick))
+
+. graph save br_loglin, replace
+(file br_loglin.gph not found)
+file br_loglin.gph saved
+
+. 
+. di "slope at 100000 = " _b[sqft]*100000
+slope at 100000 = 41.126885
+
+. di "slope at 500000 = " _b[sqft]*500000
+slope at 500000 = 205.63442
+
+. di "elasticity at 2000 = " _b[sqft]*2000
+elasticity at 2000 = .82253769
+
+. di "elasticity at 4000 = " _b[sqft]*4000
+elasticity at 4000 = 1.6450754
+
+. 
+. generate me = _b[sqft]*pricef
+
+. summarize me
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+          me |      1,080    61.00072    42.91725   27.51118   539.2198
+
+. generate elas = _b[sqft]*sqft
+
+. summarize elas
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+        elas |      1,080    .9565858    .4145993     .27226    3.24779
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\infernos\OneDrive - Kemenkeu\03 Lain Lain\Mengajar 2025\
+> Metolit\Latihan-Kuantitatif\chap02_llin.log
+  log type:  text
+ closed on:  31 Jul 2025, 16:21:10
+------------------------------------------------------------------------------
