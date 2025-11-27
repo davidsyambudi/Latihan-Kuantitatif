@@ -1,0 +1,79 @@
+=============================================
+NILAI IDEAL FIT MEASURES UNTUK CFA
+=============================================
+
+1. CHI-SQUARE (χ² TEST)
+- Nilai Ideal: p-value > 0.05
+- Interpretasi:
+  * Baik: Tidak signifikan (model fit)
+  * Buruk: Signifikan (model tidak fit)
+- Catatan: Sensitif terhadap sampel besar
+
+2. COMPARATIVE FIT INDEX (CFI)
+- Nilai Ideal: ≥0.95 (sangat baik), ≥0.90 (diterima)
+- Interpretasi:
+  * <0.90: Model perlu revisi
+  * 0.90-0.95: Cukup baik
+  * >0.95: Sangat baik
+
+3. TUCKER-LEWIS INDEX (TLI)
+- Nilai Ideal: ≥0.95 (sangat baik), ≥0.90 (diterima)
+- Interpretasi:
+  * Mirip CFI tapi lebih konservatif
+  * Sering lebih rendah dari CFI
+
+4. ROOT MEAN SQUARE ERROR OF APPROXIMATION (RMSEA)
+- Nilai Ideal:
+  * <0.05: Sangat baik
+  * 0.05-0.08: Cukup baik
+  * >0.08: Buruk
+- Interval Kepercayaan:
+  * Upper bound <0.08
+
+5. STANDARDIZED ROOT MEAN SQUARE RESIDUAL (SRMR)
+- Nilai Ideal:
+  * <0.08: Baik
+  * <0.10: Dapat diterima
+  * >0.10: Buruk
+
+6. INFORMATION CRITERIA (AIC/BIC/SABIC)
+- Tidak ada nilai absolut
+- Digunakan untuk membandingkan model:
+  * Nilai lebih rendah = lebih baik
+
+=============================================
+CONTOH EVALUASI MODEL
+=============================================
+
+chi-square = 30.219 (p=0.178) → Baik (p>0.05)
+CFI = 0.575 → Buruk (<0.90)
+TLI = 0.363 → Buruk (<0.90)
+RMSEA = 0.036 → Sangat baik (<0.05)
+SRMR = 0.057 → Baik (<0.08)
+
+=============================================
+REKOMENDASI PERBAIKAN MODEL
+=============================================
+
+1. Periksa muatan faktor:
+   - Hapus indikator dengan loading <0.3
+   - Pastikan semua loading signifikan
+
+2. Periksa spesifikasi model:
+   - Tambahkan korelasi residual jika perlu
+   - Pertimbangkan struktur faktor alternatif
+
+3. Verifikasi data:
+   - Cek outlier dan missing data
+   - Uji normalitas distribusi
+
+4. Pertimbangkan:
+   - Menggunakan estimator robust jika data tidak normal
+   - Menambah ukuran sampel jika mungkin
+
+=============================================
+
+Catatan:
+- Gunakan multiple fit indices untuk evaluasi secara menyeluruh
+- Nilai ideal dapat bervariasi tergantung literatur
+- Konteks penelitian juga mempengaruhi interpretasi

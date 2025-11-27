@@ -1,0 +1,78 @@
+
+1. Apa itu Analisis Faktor?
+Analisis faktor adalah metode statistik yang digunakan untuk mencari pola hubungan antar variabel. Tujuannya adalah untuk menemukan "faktor tersembunyi" (disebut faktor laten) yang menjelaskan mengapa beberapa variabel saling berkaitan. Misalnya, nilai murid dalam Matematika, Fisika, dan Kimia bisa jadi dipengaruhi oleh satu faktor umum: kemampuan logika atau sains. Analisis faktor akan mencoba menemukan faktor seperti itu.
+
+2. Exploratory Factor Analysis (EFA)
+Apa itu EFA?
+EFA adalah metode untuk menjelajahi data dan mencari tahu berapa banyak faktor tersembunyi yang ada, serta variabel mana yang berkaitan dengan faktor tersebut. EFA digunakan saat kita belum punya dugaan atau teori awal yang kuat.
+
+Bagaimana cara kerja EFA?
+Kita mulai dari data korelasi antar variabel (misalnya, korelasi antar nilai pelajaran). Model akan mencoba mencari faktor-faktor yang menjelaskan hubungan-hubungan tersebut. Setiap variabel akan "mengisi" satu atau lebih faktor, tergantung seberapa kuat kaitannya. Hasilnya disebut factor loadings, semacam skor yang menunjukkan seberapa kuat kaitan suatu variabel dengan suatu faktor.
+
+Apa itu rotasi faktor?
+Karena hasil awal bisa sulit dibaca, dilakukan rotasi (semacam "memutar sudut pandang") agar hasil lebih mudah ditafsirkan. Tujuannya agar tiap faktor bisa punya kelompok variabel yang kuat dan jelas - misalnya satu faktor berisi variabel verbal, satu lagi numerik.
+
+3. Confirmatory Factor Analysis (CFA)
+Apa itu CFA?
+CFA digunakan saat kita sudah punya dugaan atau teori tentang struktur faktor - misalnya kita percaya bahwa ada dua faktor: verbal dan matematika, dan kita ingin mengujinya menggunakan data.
+
+Perbedaan utama dengan EFA:
+- EFA mencari struktur tanpa asumsi awal.
+- CFA menguji struktur yang sudah diasumsikan sebelumnya.
+
+Bagaimana CFA bekerja?
+Kita buat model awal (misalnya: variabel A, B, dan C berkaitan dengan faktor 1; variabel D, E, F dengan faktor 2). Model diuji: apakah cocok dengan data? Jika cocok, berarti teori kita terbukti cocok dengan kenyataan.
+
+4. Hal-hal Penting dalam Analisis Faktor
+Komunalitas dan Variansi Unik:
+- Komunalitas: bagian variansi suatu variabel yang bisa dijelaskan oleh faktor bersama.
+- Variansi unik (spesifik): bagian variansi yang hanya dimiliki oleh variabel itu saja.
+
+Menentukan jumlah faktor:
+Bisa dilihat dari grafik "scree plot" atau menggunakan uji statistik. Kita ingin model sesederhana mungkin, tapi cukup menjelaskan data.
+
+Goodness-of-fit (CFA):
+Digunakan untuk mengukur seberapa cocok model kita dengan data. Indikator umum: RMSEA, CFI, TLI, SRMR.
+
+5. Contoh Aplikasi
+Kasus: Nilai 6 mata pelajaran siswa
+EFA menemukan 2 faktor:
+1. Faktor Matematika: aritmatika, aljabar, geometri
+2. Faktor Verbal: bahasa Inggris, Prancis, sejarah
+CFA digunakan untuk mengonfirmasi apakah dua faktor itu memang cocok. Setelah diuji, ternyata dua faktor ini cukup menjelaskan hubungan antar nilai dengan baik.
+
+6. Kesimpulan
+EFA berguna saat kita ingin memahami struktur tersembunyi dari data. CFA digunakan untuk mengonfirmasi dugaan atau teori struktur faktor. Keduanya saling melengkapi dan sangat berguna dalam penelitian sosial, pendidikan, psikologi, dan bidang lainnya. Pemahaman faktor laten sangat penting saat menyusun atau mengevaluasi kuesioner dan instrumen penelitian.
+
+Perbedaan Faktor Loading dan Koefisien Regresi
+Perbedaan antara faktor loading dalam analisis faktor dan koefisien regresi dalam regresi linear biasa terletak pada tujuan analisis, jenis variabel, serta interpretasi koefisiennya.
+
+1. Tujuan dan Konteks Analisis
+- Koefisien regresi (β) digunakan dalam analisis regresi biasa, di mana tujuannya adalah memprediksi satu variabel terikat (dependent) berdasarkan satu atau lebih variabel bebas (independent).
+- Faktor loading (λ) digunakan dalam analisis faktor (EFA atau CFA), di mana tujuannya adalah menemukan struktur laten (faktor tersembunyi) yang menjelaskan hubungan antar variabel observasi.
+
+2. Jenis Variabel
+- Regresi biasa: Variabel bebas (X) dan terikat (Y) bisa diukur langsung (observed).
+- Analisis faktor: Variabel pengamatan (X) terukur, tetapi faktor (F) tidak terukur langsung (laten).
+
+3. Interpretasi Koefisien
+- Koefisien regresi (β): Menyatakan berapa besar perubahan pada Y jika X berubah satu satuan.
+- Faktor loading (λ): Menyatakan seberapa kuat hubungan antara suatu variabel dengan faktor laten.
+
+4. Bentuk Model
+- Regresi biasa: Model bersifat satu arah (X → Y).
+- Analisis faktor: Model bersifat reflektif (faktor → variabel).
+
+5. Analogi Sederhana
+- Regresi seperti menjelaskan berapa banyak pendapatan dipengaruhi oleh tingkat pendidikan.
+- Analisis faktor seperti mencoba menemukan "kecerdasan umum" dari pola jawaban murid.
+
+Tabel Ringkas Perbedaan
+Aspek                    | Koefisien Regresi (β)        | Faktor Loading (λ)
+------------------------ | ---------------------------- | ----------------------------
+Tujuan                   | Prediksi variabel terikat    | Identifikasi struktur faktor
+Variabel penyebab        | Observed (X)                 | Laten (Faktor)
+Variabel yang diprediksi | Observed (Y)                 | Observed (X)
+Interpretasi             | Perubahan unit (efek X ke Y) | Korelasi dengan faktor laten
+Arah hubungan            | X → Y                        | Faktor → X
+
